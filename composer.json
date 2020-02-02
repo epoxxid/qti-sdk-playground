@@ -1,0 +1,15 @@
+{
+    "name": "rk/qti-sdk-playground",
+    "description": "Playground to test QTI SDK library",
+    "type": "project",
+    "require": {
+        "qtism/qtism": "12.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Kovalev",
+            "email": "epoxxid@gmail.com"
+        }
+    ]
+}
