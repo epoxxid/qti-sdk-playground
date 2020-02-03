@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="Test-1" title="Test 1" toolName="tao" toolVersion="3.4.0-sprint120" xsi:schemaLocation="http://www.taotesting.com/xsd/qticompact_v1p0.xsd">
+    <testPart identifier="testPart-1" navigationMode="linear" submissionMode="individual">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <assessmentSection identifier="assessmentSection-1" required="true" fixed="false" title="Section 1" visible="true" keepTogether="true">
+            <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+            <assessmentItemRef identifier="item-1" required="false" fixed="false" href="../../items/i5e37bbd2cf7fa754e391b68379fa77/qti.xml" adaptive="false" timeDependent="false" title="Essay about Russia" label="Essay about Russia">
+                <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+                <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string"/>
+                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="0"/>
+                <outcomeDeclaration identifier="VALUE" cardinality="single" baseType="float" interpretation="Content and Value" normalMaximum="2" normalMinimum="0" externalScored="human"/>
+                <outcomeDeclaration identifier="GRAMMAR" cardinality="single" baseType="float" interpretation="Grammar" normalMaximum="5" normalMinimum="0" externalScored="human"/>
+                <outcomeDeclaration identifier="UNIQUENESS" cardinality="single" baseType="float" interpretation="Uniqueness" normalMaximum="10" normalMinimum="0" externalScored="human"/>
+                <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>17</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <responseProcessing template="http://www.imsglobal.org/question/qti_v2p2/rptemplates/match_correct"/>
+                <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="0"/>
+            </assessmentItemRef>
+            <assessmentItemRef identifier="item-2" required="false" fixed="false" href="../../items/i5e37bf84cfbc07f1400e477e3b40e0/qti.xml" adaptive="false" timeDependent="false" title="Essay about USA" label="Essay about USA">
+                <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+                <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string"/>
+                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="0"/>
+                <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>9</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <outcomeDeclaration identifier="EXPRESSION" cardinality="single" baseType="float" interpretation="Expression" normalMaximum="4" normalMinimum="0" externalScored="human"/>
+                <outcomeDeclaration identifier="VALUE" cardinality="single" baseType="float" interpretation="Value" normalMaximum="5" normalMinimum="0" externalScored="human"/>
+                <responseProcessing template="http://www.imsglobal.org/question/qti_v2p2/rptemplates/match_correct"/>
+                <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="0"/>
+            </assessmentItemRef>
+        </assessmentSection>
+    </testPart>
+</assessmentTest>

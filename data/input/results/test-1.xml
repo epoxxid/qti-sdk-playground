@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assessmentResult xmlns="http://www.imsglobal.org/xsd/imsqti_result_v2p1">
-  <context sourcedId="i5de782bdda5eb7e18de05b30367300"/>
-  <testResult identifier="rdf#i5e1ebc7d833d4745ff793e3b301f87" datestamp="2020-01-15T08:18:50.741">
+  <context sourcedId="i5e37c59c838a67e6ab18807faf2811"/>
+  <testResult identifier="rdf#i5e37c5ef20a748250b75413e889bd2" datestamp="2020-02-03T08:05:16.329">
     <outcomeVariable identifier="LtiOutcome" cardinality="single" baseType="float">
-      <value><![CDATA[100]]></value>
+      <value><![CDATA[0]]></value>
     </outcomeVariable>
   </testResult>
-  <itemResult identifier="item-1" datestamp="2020-01-15T08:17:48.257" sessionStatus="final">
+  <itemResult identifier="item-1" datestamp="2020-02-03T08:04:41.292" sessionStatus="final">
     <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
       <candidateResponse>
         <value><![CDATA[1]]></value>
@@ -14,7 +14,42 @@
     </responseVariable>
     <responseVariable identifier="duration" cardinality="single" baseType="duration">
       <candidateResponse>
-        <value><![CDATA[PT29.599720S]]></value>
+        <value><![CDATA[PT24.837663S]]></value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value><![CDATA[completed]]></value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value><![CDATA[0]]></value>
+    </outcomeVariable>
+    <outcomeVariable identifier="VALUE" cardinality="single" baseType="float">
+      <value><![CDATA[0]]></value>
+    </outcomeVariable>
+    <outcomeVariable identifier="GRAMMAR" cardinality="single" baseType="float">
+      <value><![CDATA[0]]></value>
+    </outcomeVariable>
+    <outcomeVariable identifier="UNIQUENESS" cardinality="single" baseType="float">
+      <value><![CDATA[0]]></value>
+    </outcomeVariable>
+    <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
+      <value><![CDATA[17]]></value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="single" baseType="string">
+      <candidateResponse>
+        <value><![CDATA[Here is a cold, humid and windy winter outside]]></value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="item-2" datestamp="2020-02-03T08:05:16.325" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value><![CDATA[1]]></value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="duration">
+      <candidateResponse>
+        <value><![CDATA[PT34.984667S]]></value>
       </candidateResponse>
     </responseVariable>
     <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
@@ -24,9 +59,9 @@
       <value><![CDATA[0]]></value>
     </outcomeVariable>
     <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
-      <value><![CDATA[10]]></value>
+      <value><![CDATA[9]]></value>
     </outcomeVariable>
-    <outcomeVariable identifier="GRAMMAR" cardinality="single" baseType="float">
+    <outcomeVariable identifier="EXPRESSION" cardinality="single" baseType="float">
       <value><![CDATA[0]]></value>
     </outcomeVariable>
     <outcomeVariable identifier="VALUE" cardinality="single" baseType="float">
@@ -34,39 +69,7 @@
     </outcomeVariable>
     <responseVariable identifier="RESPONSE" cardinality="single" baseType="string">
       <candidateResponse>
-        <value><![CDATA[Hi, my name is Roman and I'm living in Russia. It is so amazing country!]]></value>
-      </candidateResponse>
-    </responseVariable>
-  </itemResult>
-  <itemResult identifier="item-2" datestamp="2020-01-15T08:18:50.729" sessionStatus="final">
-    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
-      <candidateResponse>
-        <value><![CDATA[1]]></value>
-      </candidateResponse>
-    </responseVariable>
-    <responseVariable identifier="duration" cardinality="single" baseType="duration">
-      <candidateResponse>
-        <value><![CDATA[PT1M2.425995S]]></value>
-      </candidateResponse>
-    </responseVariable>
-    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
-      <value><![CDATA[completed]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="UNIQUENESS" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="QUALITY" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <responseVariable identifier="RESPONSE" cardinality="single" baseType="string">
-      <candidateResponse>
-        <value><![CDATA[Hi, my name is Roman and I think that USA's government debt is so huge!]]></value>
+        <value><![CDATA[I'm driving Lamborghini along Miami coast]]></value>
       </candidateResponse>
     </responseVariable>
   </itemResult>

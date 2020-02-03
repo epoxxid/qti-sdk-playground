@@ -14,24 +14,26 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'vendor/autoload.php';
-$inputPath = 'data/input';
+$inputTestPath = 'data/input/tests';
+$inputResultPath = 'data/input/results';
 $outputPath = 'data/output';
-$fileName = 'ass-result-1.xml';
+$fileName = 'test-1.xml';
 
 $requestData = [
     'item-1' => [
         'GRAMMAR' => 4,
-        'VALUE' => 3
+        'VALUE' => 1,
+        'UNIQUENESS' => 5
     ],
     'item-2' => [
-        'UNIQUENESS' => 6,
-        'QUALITY' => 2
+        'EXPRESSION' => 4,
+        'VALUE' => 3
     ],
 ];
 
 // read
 $xmlDocument = new XmlResultDocument();
-$xmlDocument->load("$inputPath/$fileName");
+$xmlDocument->load("$inputResultPath/$fileName");
 
 /** @var AssessmentResult $assessmentResult */
 $assessmentResult = $xmlDocument->getDocumentComponent();
@@ -60,8 +62,8 @@ foreach ($requestData as $itemId => $scores) {
             }
         }
 
-        $itemProcessingEngine = new OutcomeProcessingEngine($itemResult);
-        $itemProcessingEngine->process();
+//        $itemProcessingEngine = new OutcomeProcessingEngine($itemResult);
+//        $itemProcessingEngine->process();
     }
 }
 
@@ -69,3 +71,5 @@ foreach ($requestData as $itemId => $scores) {
 $xmlDocument = new XmlResultDocument();
 $xmlDocument->setDocumentComponent($assessmentResult);
 file_put_contents("$outputPath/$fileName", $xmlDocument->saveToString());
+
+echo 'Processing finished' . PHP_EOL;
