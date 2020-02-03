@@ -61,9 +61,6 @@ foreach ($requestData as $itemId => $scores) {
                 }
             }
         }
-
-//        $itemProcessingEngine = new OutcomeProcessingEngine($itemResult);
-//        $itemProcessingEngine->process();
     }
 }
 

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="Test-1" title="Test 1" toolName="tao" toolVersion="3.4.0-sprint120" xsi:schemaLocation="http://www.taotesting.com/xsd/qticompact_v1p0.xsd">
+    <outcomeDeclaration identifier="SCORE_TOTAL" cardinality="single" baseType="float"/>
+    <outcomeDeclaration identifier="SCORE_TOTAL_MAX" cardinality="single" baseType="float"/>
+    <outcomeDeclaration identifier="SCORE_RATIO" cardinality="single" baseType="float"/>
+    <outcomeDeclaration identifier="PASS_ALL" cardinality="single" baseType="boolean"/>
+    <outcomeDeclaration identifier="PASS_ALL_RENDERING" cardinality="single" baseType="identifier"/>
+    <timeLimits allowLateSubmission="false"/>
     <testPart identifier="testPart-1" navigationMode="linear" submissionMode="individual">
         <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
         <assessmentSection identifier="assessmentSection-1" required="true" fixed="false" title="Section 1" visible="true" keepTogether="true">
@@ -22,17 +28,104 @@
             <assessmentItemRef identifier="item-2" required="false" fixed="false" href="../../items/i5e37bf84cfbc07f1400e477e3b40e0/qti.xml" adaptive="false" timeDependent="false" title="Essay about USA" label="Essay about USA">
                 <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
                 <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string"/>
-                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="0"/>
+                <responseDeclaration identifier="RESPONSE_1" cardinality="multiple" baseType="identifier">
+                    <correctResponse>
+                        <value>choice_2</value>
+                    </correctResponse>
+                </responseDeclaration>
+                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="1"/>
                 <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
                     <defaultValue>
-                        <value>9</value>
+                        <value>10</value>
                     </defaultValue>
                 </outcomeDeclaration>
                 <outcomeDeclaration identifier="EXPRESSION" cardinality="single" baseType="float" interpretation="Expression" normalMaximum="4" normalMinimum="0" externalScored="human"/>
                 <outcomeDeclaration identifier="VALUE" cardinality="single" baseType="float" interpretation="Value" normalMaximum="5" normalMinimum="0" externalScored="human"/>
-                <responseProcessing template="http://www.imsglobal.org/question/qti_v2p2/rptemplates/match_correct"/>
+                <responseProcessing>
+                    <responseCondition>
+                        <responseIf>
+                            <match>
+                                <variable identifier="RESPONSE"/>
+                                <correct identifier="RESPONSE"/>
+                            </match>
+                            <setOutcomeValue identifier="SCORE">
+                                <sum>
+                                    <variable identifier="SCORE"/>
+                                    <baseValue baseType="integer">1</baseValue>
+                                </sum>
+                            </setOutcomeValue>
+                        </responseIf>
+                    </responseCondition>
+                    <responseCondition>
+                        <responseIf>
+                            <match>
+                                <variable identifier="RESPONSE_1"/>
+                                <correct identifier="RESPONSE_1"/>
+                            </match>
+                            <setOutcomeValue identifier="SCORE">
+                                <sum>
+                                    <variable identifier="SCORE"/>
+                                    <baseValue baseType="integer">1</baseValue>
+                                </sum>
+                            </setOutcomeValue>
+                        </responseIf>
+                    </responseCondition>
+                </responseProcessing>
                 <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="0"/>
+                <responseValidityConstraint responseIdentifier="RESPONSE_1" minConstraint="0" maxConstraint="0"/>
             </assessmentItemRef>
         </assessmentSection>
     </testPart>
+    <outcomeProcessing>
+        <setOutcomeValue identifier="SCORE_TOTAL">
+            <sum>
+                <testVariables variableIdentifier="SCORE"/>
+            </sum>
+        </setOutcomeValue>
+        <setOutcomeValue identifier="SCORE_TOTAL_MAX">
+            <sum>
+                <testVariables variableIdentifier="MAXSCORE"/>
+            </sum>
+        </setOutcomeValue>
+        <outcomeCondition>
+            <outcomeIf>
+                <isNull>
+                    <variable identifier="SCORE_TOTAL_MAX"/>
+                </isNull>
+                <setOutcomeValue identifier="SCORE_RATIO">
+                    <baseValue baseType="float">0</baseValue>
+                </setOutcomeValue>
+            </outcomeIf>
+            <outcomeElse>
+                <setOutcomeValue identifier="SCORE_RATIO">
+                    <divide>
+                        <variable identifier="SCORE_TOTAL"/>
+                        <variable identifier="SCORE_TOTAL_MAX"/>
+                    </divide>
+                </setOutcomeValue>
+            </outcomeElse>
+        </outcomeCondition>
+        <setOutcomeValue identifier="PASS_ALL">
+            <gte>
+                <variable identifier="SCORE_RATIO"/>
+                <baseValue baseType="float">0.5</baseValue>
+            </gte>
+        </setOutcomeValue>
+        <outcomeCondition>
+            <outcomeIf>
+                <match>
+                    <variable identifier="PASS_ALL"/>
+                    <baseValue baseType="boolean">true</baseValue>
+                </match>
+                <setOutcomeValue identifier="PASS_ALL_RENDERING">
+                    <baseValue baseType="identifier">passed</baseValue>
+                </setOutcomeValue>
+            </outcomeIf>
+            <outcomeElse>
+                <setOutcomeValue identifier="PASS_ALL_RENDERING">
+                    <baseValue baseType="identifier">not_passed</baseValue>
+                </setOutcomeValue>
+            </outcomeElse>
+        </outcomeCondition>
+    </outcomeProcessing>
 </assessmentTest>
