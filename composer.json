@@ -4,8 +4,14 @@
     "type": "project",
     "require": {
         "qtism/qtism": "12.3"
-    },
+    }
+    ,
     "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
     "authors": [
         {
             "name": "Roman Kovalev",
