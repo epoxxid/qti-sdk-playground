@@ -26,11 +26,14 @@ namespace App;
 use qtism\common\datatypes\QtiFloat;
 use qtism\data\AssessmentItem;
 use qtism\data\AssessmentTest;
+use qtism\data\processing\OutcomeProcessing;
 use qtism\data\results\AssessmentResult;
 use qtism\data\results\ItemResult;
 use qtism\data\results\ResultOutcomeVariable;
 use qtism\data\state\Value;
 use qtism\data\state\ValueCollection;
+use qtism\runtime\common\State;
+use qtism\runtime\processing\OutcomeProcessingEngine;
 
 class AssessmentProcessor
 {
@@ -59,6 +62,11 @@ class AssessmentProcessor
         foreach ($scores as $itemId => $itemScores) {
             $this->log('>>> Updating scores of item %s', $itemId);
             $this->updateItemWithScores($itemId, $itemScores);
+        }
+
+        if ($outcomeProcessing = $this->assessmentTest->getOutcomeProcessing()) {
+            $this->log('Item can be post-processed with outcome processing rules');
+            $this->runOutcomeProcessing($outcomeProcessing);
         }
     }
 
@@ -140,6 +148,13 @@ class AssessmentProcessor
         $this->log('- Updating total score of an item %s', $item->getIdentifier()->getValue());
         $totalScoreOutcome = $this->findOutcomeVariableById($item, 'SCORE');
         $this->updateOutcomeVariableValue($totalScoreOutcome, $score, false);
+    }
+
+    private function runOutcomeProcessing(OutcomeProcessing $outcomeProcessing): void
+    {
+        $state = new OutcomeProcessingState($this->assessmentResult);
+        $engine = new OutcomeProcessingEngine($outcomeProcessing, $state);
+        $engine->process();
     }
 
     private function log(string $template, ...$args): void
