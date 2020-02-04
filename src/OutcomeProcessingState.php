@@ -21,14 +21,29 @@
 
 namespace App;
 
+use qtism\data\AssessmentItemRef;
+use qtism\data\AssessmentItemRefCollection;
+use qtism\data\AssessmentTest;
 use qtism\data\results\AssessmentResult;
+use qtism\data\results\ItemResult;
+use qtism\data\results\ResultOutcomeVariable;
 use qtism\data\state\OutcomeDeclaration;
 use qtism\runtime\common\OutcomeVariable;
 use qtism\runtime\common\State;
 
 class OutcomeProcessingState extends State
 {
-    public function __construct(AssessmentResult $assessmentResult)
+    /** @var AssessmentTest */
+    private $assessmentTest;
+    /**
+     * @var AssessmentResult
+     */
+    private $assessmentResult;
+
+    public function __construct(
+        AssessmentTest $assessmentTest,
+        AssessmentResult $assessmentResult
+    )
     {
         $stateVariables = [];
         
@@ -40,7 +55,36 @@ class OutcomeProcessingState extends State
                 $testVariable->getBaseType()
             );
         }
-        
+
         parent::__construct($stateVariables);
+        $this->assessmentTest = $assessmentTest;
+        $this->assessmentResult = $assessmentResult;
+    }
+    
+    public function getItemSubset()
+    {
+        $items = new AssessmentItemRefCollection();
+
+        $item = new AssessmentItemRef('hello', 'world');
+
+
+        $items->attach(new AssessmentItemRef('hello', 'world'));
+
+        /** @var AssessmentItemRef $testItem */
+//        foreach ($this->assessmentTest->getComponentsByClassName('assessmentItemRef') as $testItem) {
+//            /** @var ItemResult $itemResult */
+//            foreach ($this->assessmentResult->getItemResults() as $itemResult) {
+//                if ($testItem->getIdentifier() === $itemResult->getIdentifier()->getValue()) {
+//                    $items->attach($testItem);
+//                }
+//            }
+//        }
+
+        return $items;
+    }
+
+    public function getAssessmentItemSessions()
+    {
+        return false;
     }
 }

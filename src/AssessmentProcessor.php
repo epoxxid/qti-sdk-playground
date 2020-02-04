@@ -152,7 +152,10 @@ class AssessmentProcessor
 
     private function runOutcomeProcessing(OutcomeProcessing $outcomeProcessing): void
     {
-        $state = new OutcomeProcessingState($this->assessmentResult);
+        $state = new OutcomeProcessingState(
+            $this->assessmentTest,
+            $this->assessmentResult
+        );
         $engine = new OutcomeProcessingEngine($outcomeProcessing, $state);
         $engine->process();
     }
