@@ -24,6 +24,8 @@
 namespace App;
 
 use qtism\common\datatypes\QtiFloat;
+use qtism\common\enums\BaseType;
+use qtism\common\enums\Cardinality;
 use qtism\data\AssessmentItem;
 use qtism\data\AssessmentTest;
 use qtism\data\processing\OutcomeProcessing;
@@ -32,6 +34,7 @@ use qtism\data\results\ItemResult;
 use qtism\data\results\ResultOutcomeVariable;
 use qtism\data\state\Value;
 use qtism\data\state\ValueCollection;
+use qtism\runtime\common\OutcomeVariable;
 use qtism\runtime\common\State;
 use qtism\runtime\processing\OutcomeProcessingEngine;
 
@@ -152,12 +155,17 @@ class AssessmentProcessor
 
     private function runOutcomeProcessing(OutcomeProcessing $outcomeProcessing): void
     {
-        $state = new OutcomeProcessingState(
-            $this->assessmentTest,
-            $this->assessmentResult
-        );
+        $state = new OutcomeProcessingState($this->assessmentTest, $this->assessmentResult);
+
         $engine = new OutcomeProcessingEngine($outcomeProcessing, $state);
         $engine->process();
+
+        foreach ($state->getKeys() as $varId) {
+            $var = $state->getVariable($varId);
+            // ===============================>
+            var_dump($var->getIdentifier(), $var->getValue());
+            // ===============================>
+        }
     }
 
     private function log(string $template, ...$args): void
