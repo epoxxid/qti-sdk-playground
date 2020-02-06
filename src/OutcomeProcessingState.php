@@ -21,11 +21,13 @@
 
 namespace App;
 
-use mysql_xdevapi\Result;
+use qtism\common\datatypes\QtiBoolean;
+use qtism\common\datatypes\QtiDatatype;
+use qtism\common\datatypes\QtiDuration;
 use qtism\common\datatypes\QtiFloat;
+use qtism\common\datatypes\QtiIdentifier;
+use qtism\common\datatypes\QtiString;
 use qtism\common\enums\BaseType;
-use qtism\common\enums\Cardinality;
-use qtism\data\AssessmentItem;
 use qtism\data\AssessmentItemRef;
 use qtism\data\AssessmentItemRefCollection;
 use qtism\data\AssessmentTest;
@@ -33,20 +35,20 @@ use qtism\data\ExtendedAssessmentItemRef;
 use qtism\data\results\AssessmentResult;
 use qtism\data\results\ItemResult;
 use qtism\data\results\ResultOutcomeVariable;
-use qtism\data\state\OutcomeDeclaration;
-use qtism\data\state\OutcomeDeclarationCollection;
+use qtism\data\state\Value;
 use qtism\runtime\common\OutcomeVariable;
 use qtism\runtime\common\State;
 use qtism\runtime\tests\AssessmentItemSession;
 use qtism\runtime\tests\AssessmentItemSessionCollection;
+use RuntimeException;
+use Throwable;
 
 class OutcomeProcessingState extends State
 {
     /** @var AssessmentTest */
     private $assessmentTest;
-    /**
-     * @var AssessmentResult
-     */
+
+    /** @var AssessmentResult */
     private $assessmentResult;
 
     public function __construct(
@@ -54,89 +56,33 @@ class OutcomeProcessingState extends State
         AssessmentResult $assessmentResult
     )
     {
-        $stateVariables = [];
-
-        /** @var OutcomeDeclaration $testVariable */
-        foreach ($assessmentResult->getTestResult()->getItemVariables() as $testVariable) {
-            $stateVariables[] = new OutcomeVariable(
-                $testVariable->getIdentifier()->getValue(),
-                $testVariable->getCardinality(),
-                $testVariable->getBaseType()
-            );
-        }
-
-        parent::__construct($stateVariables);
         $this->assessmentTest = $assessmentTest;
         $this->assessmentResult = $assessmentResult;
+        parent::__construct($this->getResultOutcomeVariables());
     }
 
     public function getItemSubset(): AssessmentItemRefCollection
     {
         $items = new AssessmentItemRefCollection();
 
-        foreach ($this->assessmentTest->getComponentsByClassName('assessmentItemRef') as $item) {
-            $items->attach($item);
+        foreach ($this->getTestItems() as $testItem) {
+            $items->attach($testItem);
         }
 
         return $items;
     }
 
-    public function getAssessmentItemSessions(): AssessmentItemSessionCollection
+    public function getAssessmentItemSessions(string $identifier): AssessmentItemSessionCollection
     {
-
         $sessions = new AssessmentItemSessionCollection();
 
-        /** @var AssessmentItemRef $testItem */
-        foreach ($this->assessmentTest->getComponentsByClassName('assessmentItemRef') as $testItem) {
-            $assessmentItem = new ExtendedAssessmentItemRef(
-                $testItem->getIdentifier(),
-                $testItem->getHref()
-            );
-
-            $itemSession = new AssessmentItemSession($assessmentItem);
-
-            $resultItem = $this->findResultItemByIdentifier($testItem->getIdentifier());
-
-            if (null === $resultItem) {
-                continue;
+        if ($testItem = $this->findTestItemByIdentifier($identifier)) {
+            try {
+                $itemSession = $this->createItemSession($testItem);
+                $sessions->attach($itemSession);
+            } catch (Throwable $e) {
+                echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
             }
-
-            foreach ($resultItem->getItemVariables() as $itemVariable) {
-                if (!$itemVariable instanceof ResultOutcomeVariable) {
-                    continue;
-                }
-
-                if ($itemVariable->getBaseType() !== BaseType::FLOAT) {
-                    continue;
-                }
-
-                if (!in_array($itemVariable->getIdentifier(), ['SCORE', 'MAXSCORE'])) {
-                    continue;
-                }
-
-                $values = $itemVariable->getValues();
-
-                $value = (string) $values[0]->getValue();
-
-                echo sprintf(
-                    'Set value of var %s_%s equals to %s',
-                    $testItem->getIdentifier(),
-                    $itemVariable->getIdentifier()->getValue(),
-                    $value
-                ) . PHP_EOL;
-                
-
-                $variable = new OutcomeVariable(
-                    $itemVariable->getIdentifier()->getValue(),
-                    $itemVariable->getCardinality(),
-                    $itemVariable->getBaseType(),
-                    new QtiFloat((float) $value)
-                );
-                
-                $itemSession->setVariable($variable);
-            }
-            
-            $sessions->attach($itemSession);
         }
 
         return $sessions;
@@ -154,4 +100,106 @@ class OutcomeProcessingState extends State
         return null;
     }
 
+    public function findTestItemByIdentifier(string $itemId)
+    {
+        foreach ($this->getTestItems() as $testItem) {
+            if ($testItem->getIdentifier() === $itemId) {
+                return $testItem;
+            }
+        }
+
+        return null;
+    }
+
+    private function createItemSession(AssessmentItemRef $testItem): AssessmentItemSession
+    {
+        $itemId = $testItem->getIdentifier();
+
+        $assessmentItem = new ExtendedAssessmentItemRef($itemId, $testItem->getHref());
+        $itemSession = new AssessmentItemSession($assessmentItem);
+
+        $resultItem = $this->findResultItemByIdentifier($itemId);
+
+        if (null === $resultItem) {
+            throw new RuntimeException(sprintf('Unable to find result item with ID %s', $itemId));
+        }
+
+        foreach ($resultItem->getItemVariables() as $resultItemVariable) {
+            if (!$resultItemVariable instanceof ResultOutcomeVariable) {
+                continue;
+            }
+
+            try {
+                $outcomeVariable = $this->createOutcomeVariable($resultItemVariable);
+                $itemSession->setVariable($outcomeVariable);
+            } catch (Throwable $e) {
+                echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
+            }
+        }
+
+        return $itemSession;
+    }
+
+    private function getResultOutcomeVariables(): array
+    {
+        $resultVariables = [];
+
+        /** @var ResultOutcomeVariable $testVariable */
+        foreach ($this->assessmentResult->getTestResult()->getItemVariables() as $testVariable) {
+            $resultVariables[] = new OutcomeVariable(
+                $testVariable->getIdentifier()->getValue(),
+                $testVariable->getCardinality(),
+                $testVariable->getBaseType()
+            );
+        }
+
+        return $resultVariables;
+    }
+
+    /**
+     * @return AssessmentItemRef[]
+     */
+    private function getTestItems(): array
+    {
+        return $this->assessmentTest->getComponentsByClassName('assessmentItemRef')->getArrayCopy();
+    }
+
+    private function createOutcomeVariable(ResultOutcomeVariable $resultItemVariable): OutcomeVariable
+    {
+        $qtiValue = $this->createQtiValue(
+            $resultItemVariable->getBaseType(),
+            $resultItemVariable->getValues()->offsetGet(0)
+        );
+
+        return new OutcomeVariable(
+            $resultItemVariable->getIdentifier()->getValue(),
+            $resultItemVariable->getCardinality(),
+            $resultItemVariable->getBaseType(),
+            $qtiValue
+        );
+    }
+
+    private function createQtiValue(int $baseType, $value): QtiDatatype
+    {
+        if ($value instanceof Value) {
+            $value = $value->getValue();
+        }
+
+        if ($value instanceof QtiDatatype) {
+            return $value;
+        }
+
+        switch ($baseType) {
+            case BaseType::IDENTIFIER:
+                return new QtiIdentifier((string)$value);
+            case BaseType::FLOAT:
+                return new QtiFloat((float)$value);
+            case BaseType::BOOLEAN:
+                return new QtiBoolean((bool)$value);
+            case BaseType::DURATION:
+                return new QtiDuration((string) $value);
+            default:
+                return new QtiString((string)$value);
+        }
+    }
 }

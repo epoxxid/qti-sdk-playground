@@ -93,39 +93,4 @@
       </candidateResponse>
     </responseVariable>
   </itemResult>
-  <itemResult identifier="item-3" datestamp="2020-02-03T10:35:12.830" sessionStatus="final">
-    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
-      <candidateResponse>
-        <value><![CDATA[1]]></value>
-      </candidateResponse>
-    </responseVariable>
-    <responseVariable identifier="duration" cardinality="single" baseType="duration">
-      <candidateResponse>
-        <value><![CDATA[PT49M35.510099S]]></value>
-      </candidateResponse>
-    </responseVariable>
-    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
-      <value><![CDATA[completed]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="VALUE" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="GRAMMAR" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="UNIQUENESS" cardinality="single" baseType="float">
-      <value><![CDATA[0]]></value>
-    </outcomeVariable>
-    <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
-      <value><![CDATA[17]]></value>
-    </outcomeVariable>
-    <responseVariable identifier="RESPONSE" cardinality="single" baseType="string">
-      <candidateResponse>
-        <value><![CDATA[It's sad, so sad - it's a sad sad situation. And it getting more and more absurd... ]]></value>
-      </candidateResponse>
-    </responseVariable>
-  </itemResult>
 </assessmentResult>

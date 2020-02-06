@@ -161,10 +161,22 @@ class AssessmentProcessor
         $engine->process();
 
         foreach ($state->getKeys() as $varId) {
-            $var = $state->getVariable($varId);
-            // ===============================>
-            var_dump($var->getIdentifier(), $var->getValue());
-            // ===============================>
+            if ($varId === 'LtiOutcome' && $scoreRatio = $state->getVariable('SCORE_RATIO')) {
+                $var = $state->getVariable('SCORE_RATIO');
+            } else {
+                $var = $state->getVariable($varId);
+            }
+
+            /** @var ResultOutcomeVariable $itemVariable */
+            foreach ($this->assessmentResult->getTestResult()->getItemVariables() as $itemVariable) {
+                if ($itemVariable->getIdentifier()->getValue() === $varId) {
+                    $itemVariable->setValues(new ValueCollection([
+                        new Value($var->getValue())
+                    ]));
+                }
+            }
+
+            $this->log('Set value %s to variable %s', $var->getValue(), $varId);
         }
     }
 
